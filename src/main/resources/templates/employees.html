@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Spring i Thymeleaf: lista pracowników</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+        
+        <style>
+            img.empPhoto {
+                width: 300px;
+            }
+            .fired {
+                color: firebrick;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid" th:inline="text">
+            <h1>Pan Prezes</h1>
+            <p>
+                <b>
+                    <span th:text='${boss.firstName}'>Imię</span>
+                    <span th:text='${boss.lastName}'>Nazwisko</span>
+                </b>
+            </p>
+            <img th:src="${boss.photoUrl}" class="empPhoto" 
+                 src="http://via.placeholder.com/250x250"/>
+
+            <h1>Pracownicy firmy</h1>
+
+            <table class="table table-striped">
+                <tr>
+                    <th>Lp</th>
+                    <th>Imię i nazwisko</th>
+                    <th>Stanowisko</th>
+                    <th>Pensja</th>
+                    <th>Data zatrudnienia</th>
+                    <th>Data zwolnienia</th>
+                    <th>Umiejętności</th>
+                    <th>Uwagi</th>
+                    <th>Zdjęcie</th>
+                </tr>
+
+                <tr th:each="employee,iterStat : ${employees}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="|${employee.getFirstName()} ${employee.getLastName()}|"></td>
+                    <td th:text="${employee.getJobTitle()}"></td>
+                    <td th:text="${#numbers.formatDecimal(employee.getSalary(),2,'WHITESPACE',2,'COMMA')}"></td>
+                    <td th:text="${#dates.format(employee.getDateOfEmployment(),'dd.MM.yyyy')}"></td>;
+                    <td th:class="${employee.getDateOfTermination()} ? 'fired'"
+                            th:text="${employee.getDateOfTermination()} ?
+                    ${#dates.format(employee.getDateOfTermination(),'dd.MM.yyyy')} : 'wciąż pracuje'">
+
+                    </td>
+                    <td>
+                        <p th:each="employeeStat,iterStat : ${employee.getSkills()}"
+                           th:text="${employeeStat.getName()+' ('+employeeStat.getLevel()+')'}+${iterStat.last ? '':','}">
+                        </p>
+
+                    </td>
+                    <td>
+                        <p th:each="employeeComments : ${employee.getComments()}"
+                           th:text="${employeeComments}"></p>
+                    </td>
+                    <td>
+                        <img th:src="${employee.photoUrl}" class="empPhoto"
+                             src="http://via.placeholder.com/250x250"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
