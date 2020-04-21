@@ -44,7 +44,7 @@
                     <th>Zdjęcie</th>
                 </tr>
 
-                <tr th:each="employee,iterStat : ${employees}">
+                <tr th:each="employee,iterStat : ${employees}" th:class="${employee.getDateOfTermination()} ? 'fired'">
                     <td th:text="${iterStat.count}"></td>
                     <td th:text="|${employee.getFirstName()} ${employee.getLastName()}|"></td>
                     <td th:text="${employee.getJobTitle()}"></td>
